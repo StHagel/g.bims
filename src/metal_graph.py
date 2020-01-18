@@ -17,7 +17,7 @@ ADJ = {}
 ADJ["psychodelic rock"] = ["hard rock"]
 ADJ["blues rock"] = ["hard rock"]
 ADJ["garage rock"] = ["hard rock", "punk rock"]
-ADJ["hard rock"] = ["heavy metal", "shock rock"]
+ADJ["hard rock"] = ["heavy metal", "shock rock", "blues rock", "garage rock", "psychodelic rock"]
 ADJ["shock rock"] = ["hard rock", "heavy metal", "glam metal"]
 ADJ["heavy metal"] = ["hard rock", "shock rock", "glam metal", "progressive metal", "nwobhm", "traditional doom metal",
                       "post metal", "folk metal", "death metal"]
