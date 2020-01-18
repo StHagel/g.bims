@@ -11,4 +11,4 @@ intelligent playlists.
 
 As of right now the graph only includes metal subgenres.
 The graph has been created in a way to resemble the "Map of Metal",
-created by Patrick Galbraith (https://mapofmetal.com/, http://www.pjgalbraith.com/).
+created by Patrick Galbraith (https://mapofmetal.com/, https://www.pjgalbraith.com/).
