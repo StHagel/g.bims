@@ -14,6 +14,7 @@
 """
 
 import sys
+import random
 import importlib
 graph = importlib.import_module(sys.argv[1])
 
@@ -120,6 +121,11 @@ def rungbims():
     backlinks = {}
     max_open_length = 0
 
+    walk_path = random_walk(initial_state, 100)
+    for genre in walk_path:
+        print(genre.__str__())
+    return 0
+
     # This is where the fun begins
     solution_path = a_star_search(initial_state)
 
@@ -127,7 +133,30 @@ def rungbims():
     # TODO: Use the solution to create the playlist instead of just printing it
     print(str(count) + " states expanded.")
     print('max_open_length = ' + str(max_open_length))
-    # print("The CLOSED list is: ", ''.join([str(s)+' ' for s in CLOSED]))
+    # print("The closed list is: ", ''.join([str(s)+' ' for s in closed]))
+
+
+def random_walk(initial_state, n):
+    """
+    From a given initial state, this function generates a list of length n,
+    which contains the states to walk to in order.
+    """
+    walk_path = []  # TODO: Think about whether to include the initial state
+    current_state = initial_state
+    for i in range(n):
+        reachable_states = []
+        for op in graph.OPERATORS:
+            if op.precond(current_state):
+                new_state = op.state_transf(current_state)
+                reachable_states.append(new_state)
+            else:
+                continue
+
+        walk_path.append(current_state)
+        rand_state = random.choice(reachable_states)
+        current_state = rand_state
+
+    return walk_path
 
 
 def a_star_search(initial_state):
