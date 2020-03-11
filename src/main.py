@@ -97,9 +97,9 @@ class MyPriorityQueue:
         """This method enables Python's del operator to delete
         items from the queue."""
         # print("In MyPriorityQueue.__delitem__: state is: ", str(state))
-        for count, (S, P) in enumerate(self.q):
+        for count_, (S, P) in enumerate(self.q):
             if S == state:
-                del self.q[count]
+                del self.q[count_]
                 return
 
     def __str__(self):
@@ -124,7 +124,6 @@ def rungbims():
     walk_path = random_walk(initial_state, 100, 0.5)
     for genre in walk_path:
         print(genre.__str__())
-    return 0
 
     # This is where the fun begins
     solution_path = a_star_search(initial_state)
@@ -133,7 +132,9 @@ def rungbims():
     # TODO: Use the solution to create the playlist instead of just printing it
     print(str(count) + " states expanded.")
     print('max_open_length = ' + str(max_open_length))
-    # print("The closed list is: ", ''.join([str(s)+' ' for s in closed]))
+
+    for state in solution_path:
+        print(state)
 
 
 def random_walk(initial_state, n, walking_probability):
@@ -166,10 +167,10 @@ def random_walk(initial_state, n, walking_probability):
 
 def a_star_search(initial_state):
     """A* search. This is the actual algorithm."""
-    global g, count, backlinks, max_open_length, CLOSED, total_cost, f
+    global g, count, backlinks, max_open_length, total_cost, f
     # We need to add g and f to the list of global variables used in the algorithm
 
-    CLOSED = []
+    closed = []
     closed_values = {}
     # closed_values will track the f-value of closed states
 
@@ -187,18 +188,18 @@ def a_star_search(initial_state):
     # STEP 2. If open_ is empty, output “DONE” and stop.
     while open_:
         if verbose:
-            report(open_, CLOSED, count)
+            report(open_, closed, count)
         if len(open_) > max_open_length:
             max_open_length = len(open_)
 
         # STEP 3. Select the state on open_ having lowest priority value and call it S.
         #         Delete S from open_.
-        #         Put S on CLOSED.
+        #         Put S on closed.
         #         If S is a goal state, output its description
         (S, p_) = open_.delete_min()
         # print("In Step 3, returned from open_.delete_min with results (S,P)= ", (str(S), P))
 
-        CLOSED.append(S)
+        closed.append(S)
         closed_values[S] = p_
         # We store the f-value of the state, we put on closed, in closed_values
 
@@ -212,7 +213,7 @@ def a_star_search(initial_state):
         count += 1
 
         # STEP 4. Generate each successors of S and delete
-        #         and if it is already on CLOSED, delete the new instance.
+        #         and if it is already on closed, delete the new instance.
         gs = g[S]  # Save the cost of getting to S in a variable.
         for op in graph.OPERATORS:
             if op.precond(S):
@@ -224,25 +225,25 @@ def a_star_search(initial_state):
                 # given by the distance plus the heuristic value
 
                 # Next we loop through closed...
-                for i in range(len(CLOSED)):
+                for i in range(len(closed)):
                     try:
                         # and check if new_state already appears on closed. If so, we check which f-value is
                         # lower and keep that element.
-                        if CLOSED[i] == new_state and closed_values[CLOSED[i]] <= new_f:
+                        if closed[i] == new_state and closed_values[closed[i]] <= new_f:
                             del new_state
                             break
 
-                        elif CLOSED[i] == new_state and closed_values[CLOSED[i]] > new_f:
-                            del closed_values[CLOSED[i]]
+                        elif closed[i] == new_state and closed_values[closed[i]] > new_f:
+                            del closed_values[closed[i]]
                             # We need to make sure to also delete the entry in closed_values, which corresponds to
                             # the deleted element.
-                            del CLOSED[i]
+                            del closed[i]
 
                     except IndexError:
                         # During debugging I ran into this error a few times. In the final version it no longer
                         # occurs, but I will leave it in just in case.
                         print("Index i out of range when looping through closed.\ni = " + str(i) +
-                              "\nlen(CLOSED) = " + str(len(CLOSED)))
+                              "\nlen(closed) = " + str(len(closed)))
                         continue
 
                 # If new_state already exists on open_:
@@ -305,10 +306,10 @@ def backtrace(s):
     return path
 
 
-def report(open_, closed, count):
+def report(open_, closed, count_):
     print("len(open_)=" + str(len(open_)), end='; ')
-    print("len(CLOSED)=" + str(len(closed)), end='; ')
-    print("count = " + str(count))
+    print("len(closed)=" + str(len(closed)), end='; ')
+    print("count = " + str(count_))
 
 
 if __name__ == '__main__':
