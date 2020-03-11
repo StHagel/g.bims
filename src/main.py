@@ -121,7 +121,7 @@ def rungbims():
     backlinks = {}
     max_open_length = 0
 
-    walk_path = random_walk(initial_state, 100)
+    walk_path = random_walk(initial_state, 100, 0.5)
     for genre in walk_path:
         print(genre.__str__())
     return 0
@@ -136,12 +136,16 @@ def rungbims():
     # print("The closed list is: ", ''.join([str(s)+' ' for s in closed]))
 
 
-def random_walk(initial_state, n):
+def random_walk(initial_state, n, walking_probability):
     """
     From a given initial state, this function generates a list of length n,
     which contains the states to walk to in order.
+    walking_probability gives the probability, that a new state is actually
+    accessed in each step. A random number in [0.0, 1.0] is generated, if
+    it is smaller than the probability, a walk is performed, if not, the same
+    genre is added to the list again.
     """
-    walk_path = []  # TODO: Think about whether to include the initial state
+    walk_path = []
     current_state = initial_state
     for i in range(n):
         reachable_states = []
@@ -153,8 +157,9 @@ def random_walk(initial_state, n):
                 continue
 
         walk_path.append(current_state)
-        rand_state = random.choice(reachable_states)
-        current_state = rand_state
+        if random.random() < walking_probability:
+            rand_state = random.choice(reachable_states)
+            current_state = rand_state
 
     return walk_path
 
